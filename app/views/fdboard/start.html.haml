@@ -123,7 +123,7 @@
                 %hr{:style => "width: 90%; background: white"}/
                 %table
                   - if(!@search.nil?)
-                    - if (n.user).include?(@search) || (n.messages).include?(@search)
+                    - if ((n.user).downcase).include?(@search.downcase) || ((n.messages).downcase).include?(@search.downcase)
                       - rev = n.user.reverse
                       - time = rev[0...20].reverse
                       - sender =n.user[0..(n.user.length()-20)]
