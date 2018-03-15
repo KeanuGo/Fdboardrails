@@ -1,0 +1,8 @@
+{
+  "name": "fdboardrails",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "webpack": "^4.1.1"
+  }
+}
