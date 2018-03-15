@@ -1,0 +1,147 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %title Freedom Board
+    %link{:crossorigin => "anonymous", :href => "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css", :integrity => "sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm", :rel => "stylesheet"}/
+  :css
+    body {
+    	padding: 10em;
+    	background: teal;
+    }
+    button {
+    	width: 150px;
+    	height: 50px;
+    	background: linear-gradient(to top, rgb(0,0,30), teal);
+    	font-family: helvetica;
+	
+    	color: white;
+    	border-radius: 4px;
+    	border: none;
+    	cursor: pointer;
+    	font-size: 20px;
+    	margin-left: 10px;
+    }
+    
+    button:hover {
+    	background: linear-gradient(to top, rgb(50,50,30), teal);
+    }	
+    
+    fieldset {
+    	background: linear-gradient(to top, teal, rgb(0,0,50));
+    	height: 100%;
+    	width: 50%;
+    	
+    	box-shadow: 0 0 1000px white;
+    	border-radius: 8px;
+    	border: thin;
+    	
+    	font-family: calibri light;
+    	
+    	font-size: 25px;
+    }
+    
+    h1 {
+    	font-size: 50px;
+    	font-weight: bold;
+    	color: white;
+    	text-shadow: -1px 0 black, 0 5px black, 1px 0 black, 0 -1px black;
+    }
+    
+    h4 {
+    	color: white;
+    	text-shadow: -1px 0 black, 0 3px black, 1px 0 black, 0 -1px black;
+    }
+    input {
+    	text-indent: 10px;
+    }
+    
+    table {
+    	width: 90%;
+    	border-collapse: collapse;
+    	border: none;
+    	font-family: calibri light;
+    	font-size: 20px;
+    	color: white;
+    	
+    	margin-left: 30px;
+    	margin-right: 30px;
+    }
+    
+    td {
+    	height: 40px;
+    	text-indent: 15px;
+    }
+    
+    th {
+    	text-indent: 15px;
+    }
+    
+    tr {
+    	height: 10px;
+    }		
+    
+    textarea {
+    	width: 650px;
+    	height: 100px;
+    	margin-top: 20px;
+    	text-indent: 5px;
+    }
+    
+    p {
+    	font-size: 20px;	
+    	font-family: calibri light;
+    	color: white;
+    	margin-left: 30px;
+    }
+  %body
+    %center
+      %h1= @title
+      %h4
+        %i "Let it  all out."
+      %br/
+      %fieldset
+        #input_post
+          %form{:action => "/fdboard/start", :method => "POST"}
+            %textarea{:cols => "50", :name => "message", :placeholder => "Please type your message.", :rows => "4", :style => "width: 90%; height: 100%"}
+            %br/
+            %br/
+            %input#name.text-success{:name => "user", :placeholder => "Your Name", :type => "text"}/
+            %button#post{:type => "submit"} POST
+        %br/
+      %br/
+      %fieldset
+        #news_feed
+          %br/
+          %form{:action => "/fdboard/start", :method => "POST"}
+            %input#search{:name => "search", :placeholder => "Search Post", :style => "height: 45px", :type => "text"}/
+            %button#search_button{:type => "submit"} Search
+          %br/
+          #posts
+            - Fdboard.find_in_batches do |u|
+              - u.reverse_each do |n|
+                %hr{:style => "width: 90%; background: white"}/
+                %table
+                  - if(!@search.nil?)
+                    - if (n.user).include?(@search) || (n.messages).include?(@search)
+                      - rev = n.user.reverse
+                      - time = rev[0...20].reverse
+                      - sender =n.user[0..(n.user.length()-20)]
+                      %tr
+                        %th
+                          = sender
+                        %td{:align => "right"}
+                          = time
+                      %tr
+                        %td{:style => "width: 100%"}= n.messages
+                  - else
+                    - rev = n.user.reverse
+                    - time = rev[0...20].reverse
+                    - sender =n.user[0..(n.user.length()-20)]
+                    %tr
+                      %th
+                        = sender
+                      %td{:align => "right"}= time
+                    %tr
+                      %td{:style => "width: 100%"}= n.messages
+        %br/

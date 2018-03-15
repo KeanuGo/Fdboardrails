@@ -1,0 +1,2 @@
+class Fdboard < ApplicationRecord
+end
